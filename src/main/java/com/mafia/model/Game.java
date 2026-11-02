@@ -1,4 +1,5 @@
 package com.mafia.model;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,43 +44,43 @@ public class Game {
         return mafia;
     }
 
-     public List<Player> getAliveCity() {
-         List<Player> city = new ArrayList<>();
-         for (Player player : getAlivePlayers()) {
-             if (!player.isMafia()) {
-                 city.add(player);
-             }
-         }
-         return city;
-     }
+    public List<Player> getAliveCity() {
+        List<Player> city = new ArrayList<>();
+        for (Player player : getAlivePlayers()) {
+            if (!player.isMafia()) {
+                city.add(player);
+            }
+        }
+        return city;
+    }
 
-     public int getAliveMafiaCount() {
+    public int getAliveMafiaCount() {
         return getAliveMafia().size();
-     }
+    }
 
-     public int getAliveCityCount() {
+    public int getAliveCityCount() {
         return getAliveCity().size();
-     }
+    }
 
-     public GamePhase getPhase() {
+    public GamePhase getPhase() {
         return phase;
-     }
+    }
 
-     public void setPhase(GamePhase phase) {
+    public void setPhase(GamePhase phase) {
         this.phase = Objects.requireNonNull(phase, "Фаза не может быть null");
-     }
+    }
 
-     public int getDay() {
+    public int getDay() {
         return day;
-     }
+    }
 
-     public void nextDay() {
+    public void nextDay() {
         day++;
-     }
+    }
 
-     public Team getWinner() {
+    public Team getWinner() {
         return winner;
-     }
+    }
 
     public void setWinner(Team winner) {
         this.winner = Objects.requireNonNull(winner, "Победитель не может быть null");
@@ -89,3 +90,8 @@ public class Game {
         return winner != null;
     }
 }
+
+/*Аналогия:
+Player — фишка на столе;
+GamePhase — табличка «сейчас ночь»;
+Game — весь стол с фишками и табличкой.*/

@@ -4,14 +4,14 @@ import java.util.Objects;
 /**
  * Базовая роль игрока.
  */
-public abstract class Role {
+public abstract class Role implements NightAction {
 
     private final String name;
     private final Team team;
 
-    protected  Role(String name, Team team) {
+    protected Role(String name, Team team) {
         this.name = Objects.requireNonNull(name, "Название роли не может быть пустым");
-        this.team = Objects.requireNonNull(team, "Команда не может быть пустым");
+        this.team = Objects.requireNonNull(team, "Команда не может быть пустой");
     }
 
     public String getName() {
