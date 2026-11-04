@@ -29,15 +29,13 @@ public class NightResolver {
         }
 
         for (NightActionResult action : actions) {
-            if (action.getType() == NightActionType.HEAL
-                    && !blocked.contains(action.getActor())) {
+            if (action.getType() == NightActionType.HEAL && !blocked.contains(action.getActor())) {
                 healed.add(action.getTarget());
             }
         }
 
         for (NightActionResult action : actions) {
-            if (action.getType() == NightActionType.CHECK
-                    && !blocked.contains(action.getActor())) {
+            if (action.getType() == NightActionType.CHECK && !blocked.contains(action.getActor())) {
                 Team team = action.getCheckedTeam().orElseThrow();
                 checks.put(action.getTarget(), team);
                 action.getActor().getKnowledge().rememberTeam(action.getTarget(), team);
@@ -45,8 +43,7 @@ public class NightResolver {
         }
 
         for (NightActionResult action : actions) {
-            if (action.getType() == NightActionType.KILL
-                    && !blocked.contains(action.getActor())) {
+            if (action.getType() == NightActionType.KILL && !blocked.contains(action.getActor())) {
                 Player target = action.getTarget();
 
                 if (healed.contains(target)) {
