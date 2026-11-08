@@ -8,26 +8,55 @@ import com.mafia.model.role.Commissioner;
 import com.mafia.model.role.Doctor;
 import com.mafia.model.role.Lover;
 import com.mafia.model.role.Mafia;
+import com.mafia.model.role.Role;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class GameService {
 
     public Game createGame(List<String> names) {
-        if (names == null || names.size() != 5) {
-            throw new IllegalArgumentException("Нужно ровно 5 игроков");
+        if (names == null || names.size() < 5) {
+            throw new IllegalArgumentException("Нужно минимум 5 игроков");
         }
 
+        Set<String> uniqueNames = new HashSet<>();
+
+        for (String name : names) {
+            if (name == null || name.isBlank()) {
+                throw new IllegalArgumentException("Имя игрока не может быть пустым");
+            }
+            if (!uniqueNames.add(name)) {
+                throw new IllegalArgumentException("Имена игроков не должны повторяться");
+            }
+        }
+
+        int mafiaCount = Math.max(1, names.size() / 3);
+
+        List<Role> roles = new ArrayList<>();
+
+        for (int i = 0; i < mafiaCount; i++) {
+            roles.add(new Mafia());
+        }
+
+        roles.add(new Commissioner());
+        roles.add(new Doctor());
+        roles.add(new Lover());
+
+        while (roles.size() < names.size()) {
+            roles.add(new Civilian());
+        }
+
+        Collections.shuffle(roles);
+
         List<Player> players = new ArrayList<>();
-
-        players.add(new Player(names.get(0), new Mafia()));
-        players.add(new Player(names.get(1), new Commissioner()));
-        players.add(new Player(names.get(2), new Doctor()));
-        players.add(new Player(names.get(3), new Lover()));
-        players.add(new Player(names.get(4), new Civilian()));
-
+        for (int i = 0; i < names.size(); i++) {
+            players.add(new Player(names.get(i), roles.get(i)));
+        }
         return new Game(players);
     }
 
@@ -41,8 +70,5 @@ public class GameService {
         }
 
         return Optional.empty();
-    }
-
-    public void play(Game game) {
     }
 }
