@@ -10,8 +10,8 @@ public abstract class Role implements NightAction {
     private final Team team;
 
     protected Role(String name, Team team) {
-        this.name = Objects.requireNonNull(name, "Название роли не может быть пустым");
-        this.team = Objects.requireNonNull(team, "Команда не может быть пустой");
+        this.name = Objects.requireNonNull(name, "Название роли не может быть null");
+        this.team = Objects.requireNonNull(team, "Команда не может быть null");
     }
 
     public String getName() {
