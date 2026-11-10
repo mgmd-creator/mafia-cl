@@ -6,6 +6,9 @@ import com.mafia.model.VotingResult;
 
 import java.util.*;
 
+/**
+ * Считает голоса и определяет итог голосования.
+ */
 public class VotingService {
 
     public VotingResult vote(List<Vote> votes, List<Player> candidates) {

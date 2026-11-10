@@ -26,6 +26,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Точка входа в игру.
+ */
 public class Main {
 
     public static void main(String[] args) {

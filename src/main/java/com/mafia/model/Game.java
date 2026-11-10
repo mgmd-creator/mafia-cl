@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Состояние партии: игроки, фаза, день и победитель.
+ */
 public class Game {
 
     private final List<Player> players;

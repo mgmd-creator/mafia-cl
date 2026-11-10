@@ -4,6 +4,9 @@ import com.mafia.model.Player;
 import com.mafia.model.Team;
 
 
+/**
+ * Любовница.
+ */
 public class Lover extends Role {
 
     public Lover() {

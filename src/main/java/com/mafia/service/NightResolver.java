@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Разрешает ночные действия и конфликты.
+ */
 public class NightResolver {
 
     public NightResult resolve(Game game, List<NightActionResult> actions) {

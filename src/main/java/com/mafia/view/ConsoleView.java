@@ -5,6 +5,9 @@ import com.mafia.model.Player;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Консольный ввод и вывод.
+ */
 public class ConsoleView {
 
     private final Scanner scanner = new Scanner(System.in);

@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Итог голосования.
+ */
 public class VotingResult {
 
     private final Player executed;

@@ -2,6 +2,9 @@ package com.mafia.model;
 
 import java.util.Objects;
 
+/**
+ * Голос одного игрока.
+ */
 public class Vote {
 
     private final Player voter;

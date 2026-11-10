@@ -4,6 +4,9 @@ import com.mafia.model.Player;
 import com.mafia.model.Team;
 
 
+/**
+ * Доктор.
+ */
 public class Doctor extends Role {
 
     public Doctor() {

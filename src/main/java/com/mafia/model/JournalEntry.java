@@ -3,6 +3,9 @@ package com.mafia.model;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Одна запись журнала партии.
+ */
 public class JournalEntry {
     private final int day;
     private final GamePhase phase;

@@ -4,6 +4,9 @@ import com.mafia.model.Player;
 import com.mafia.model.Team;
 
 
+/**
+ * Комиссар.
+ */
 public class Commissioner extends Role {
 
     public Commissioner() {

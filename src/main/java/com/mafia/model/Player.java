@@ -4,6 +4,9 @@ import com.mafia.model.role.Role;
 
 import java.util.Objects;
 
+/**
+ * Участник партии.
+ */
 public class Player {
 
     private final String name;

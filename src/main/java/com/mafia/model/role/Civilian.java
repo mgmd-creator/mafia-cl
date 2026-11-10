@@ -4,6 +4,9 @@ import com.mafia.model.Player;
 import com.mafia.model.Team;
 
 
+/**
+ * Мирный житель.
+ */
 public class Civilian extends Role {
 
     public Civilian() {

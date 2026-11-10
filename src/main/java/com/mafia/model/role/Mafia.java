@@ -3,6 +3,9 @@ package com.mafia.model.role;
 import com.mafia.model.Player;
 import com.mafia.model.Team;
 
+/**
+ * Мафия.
+ */
 public class Mafia extends Role {
 
     public Mafia() {

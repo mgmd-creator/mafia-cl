@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Хранит журнал и выдаёт записи конкретному игроку.
+ */
 public class JournalService {
 
     private final List<JournalEntry> entries = new ArrayList<>();

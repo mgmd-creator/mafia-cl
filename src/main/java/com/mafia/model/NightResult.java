@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Итог одной ночи.
+ */
 public class NightResult {
 
     private final Player killed;

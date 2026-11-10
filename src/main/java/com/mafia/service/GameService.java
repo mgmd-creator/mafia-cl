@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Создаёт партию и проверяет условия победы.
+ */
 public class GameService {
 
     public Game createGame(List<String> names) {
