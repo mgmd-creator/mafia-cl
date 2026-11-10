@@ -49,4 +49,13 @@ class GameServiceTest {
 
         assertEquals(Optional.of(Team.MAFIA), service.checkWinner(game));
     }
+
+    @Test
+    void cityWinsWhenNoMafiaAlive() {
+        Game game = new Game(List.of(
+                new Player("Аня", new Civilian())
+        ));
+
+        assertEquals(Optional.of(Team.CIVILIANS), service.checkWinner(game));
+    }
 }

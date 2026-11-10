@@ -85,4 +85,21 @@ class NightResolverTest {
         assertEquals(Team.MAFIA, result.getChecks().get(mafia));
         assertEquals(Team.MAFIA, commissioner.getKnowledge().getKnownTeam(mafia).orElseThrow());
     }
+
+    @Test
+    void loverBlocksMafia() {
+        Player mafia = new Player("Мафия", new Mafia());
+        Player lover = new Player("Любовница", new Lover());
+        Player victim = new Player("Аня", new Civilian());
+        Game game = new Game(List.of(mafia, lover, victim));
+
+        NightResult result = resolver.resolve(game, List.of(
+                NightActionResult.block(lover, mafia),
+                NightActionResult.kill(mafia, victim)
+        ));
+
+        assertNull(result.getKilled());
+        assertTrue(victim.isAlive());
+        assertTrue(result.getBlocked().contains(mafia));
+    }
 }

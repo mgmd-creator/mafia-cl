@@ -110,15 +110,16 @@ mvn package
 
 ## Тестирование
 
-В проекте **15 unit-тестов**:
+В проекте **20 unit-тестов**:
 
 - `PlayerTest` — 3;
 - `PlayerKnowledgeTest` — 1;
-- `RoleTest` — 1;
-- `NightResolverTest` — 4;
-- `VotingServiceTest` — 3;
+- `GameTest` — 1;
+- `RoleTest` — 2;
+- `NightResolverTest` — 5;
+- `VotingServiceTest` — 4;
 - `JournalServiceTest` — 1;
-- `GameServiceTest` — 2.
+- `GameServiceTest` — 3.
 
 Запуск:
 

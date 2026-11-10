@@ -60,4 +60,13 @@ class VotingServiceTest {
         assertEquals(boris, second.getExecuted());
         assertFalse(second.isTie());
     }
+
+    @Test
+    void noVotesMeansNoExecution() {
+        VotingResult result = service.vote(List.of(), candidates);
+
+        assertNull(result.getExecuted());
+        assertFalse(result.isTie());
+        assertTrue(result.getLeaders().isEmpty());
+    }
 }
