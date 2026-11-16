@@ -4,7 +4,7 @@ import com.mafia.model.Player;
 import com.mafia.model.Team;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RoleTest {
 
@@ -29,5 +29,14 @@ class RoleTest {
         assertEquals(NightActionType.HEAL, new Doctor().perform(actor, target).getType());
         assertEquals(NightActionType.BLOCK, new Lover().perform(actor, target).getType());
         assertEquals(NightActionType.CHECK, new Commissioner().perform(actor, target).getType());
+
+        assertFalse(new Civilian().hasNightAction());
+        assertFalse(new Mafia().hasNightAction());
+        assertTrue(new Commissioner().hasNightAction());
+        assertTrue(new Doctor().hasNightAction());
+        assertTrue(new Lover().hasNightAction());
+
+        assertTrue(new Doctor().canTargetSelf());
+        assertFalse(new Commissioner().canTargetSelf());
     }
 }

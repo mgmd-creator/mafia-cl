@@ -8,5 +8,15 @@ public enum GamePhase {
     MORNING,
     DISCUSSION,
     VOTING,
-    EXECUTION
+    EXECUTION;
+
+    public GamePhase next() {
+        return switch (this) {
+            case NIGHT -> MORNING;
+            case MORNING -> DISCUSSION;
+            case DISCUSSION -> VOTING;
+            case VOTING -> EXECUTION;
+            case EXECUTION -> NIGHT;
+        };
+    }
 }

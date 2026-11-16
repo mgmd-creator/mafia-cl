@@ -60,7 +60,31 @@ public class GameService {
         for (int i = 0; i < names.size(); i++) {
             players.add(new Player(names.get(i), roles.get(i)));
         }
+
+        initializeKnowledge(players);
+
         return new Game(players);
+    }
+
+    private void initializeKnowledge(List<Player> players) {
+        for (Player player : players) {
+            player.getKnowledge().rememberTeam(player, player.getRole().getTeam());
+        }
+
+        List<Player> mafia = new ArrayList<>();
+        for (Player player : players) {
+            if (player.isMafia()) {
+                mafia.add(player);
+            }
+        }
+
+        for (Player player : mafia) {
+            for (Player teammate : mafia) {
+                if (player != teammate) {
+                    player.getKnowledge().rememberTeam(teammate, Team.MAFIA);
+                }
+            }
+        }
     }
 
     public Optional<Team> checkWinner(Game game) {

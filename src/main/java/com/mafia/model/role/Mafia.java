@@ -13,6 +13,11 @@ public class Mafia extends Role {
     }
 
     @Override
+    public boolean hasNightAction() {
+        return false;
+    }
+
+    @Override
     public NightActionResult perform(Player actor, Player target) {
         return NightActionResult.kill(actor, target);
     }

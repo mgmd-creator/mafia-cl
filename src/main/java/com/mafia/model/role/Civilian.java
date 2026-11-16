@@ -14,6 +14,11 @@ public class Civilian extends Role {
     }
 
     @Override
+    public boolean hasNightAction() {
+        return false;
+    }
+
+    @Override
     public NightActionResult perform(Player actor, Player target) {
         return NightActionResult.none(actor);
     }

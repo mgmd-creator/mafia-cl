@@ -8,9 +8,7 @@ import com.mafia.model.Player;
 import com.mafia.model.Team;
 import com.mafia.model.Vote;
 import com.mafia.model.VotingResult;
-import com.mafia.model.role.Commissioner;
-import com.mafia.model.role.Doctor;
-import com.mafia.model.role.Lover;
+import com.mafia.model.role.NightActionType;
 import com.mafia.model.role.NightActionResult;
 import com.mafia.model.role.Role;
 import com.mafia.service.GameService;
@@ -26,9 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Точка входа в игру.
- */
 public class Main {
 
     public static void main(String[] args) {
@@ -70,6 +65,8 @@ public class Main {
             view.print(player.getName() + " — " + player.getRole());
         }
 
+        addMafiaTeammateJournal(journal, game);
+
         while (!game.isGameOver()) {
             Optional<Team> winner = gameService.checkWinner(game);
             if (winner.isPresent()) {
@@ -83,55 +80,40 @@ public class Main {
             view.print("Живых игроков: " + game.getAlivePlayers().size());
 
             List<NightActionResult> actions = new ArrayList<>();
-
-            Player mafiaTarget = null;
             List<Player> aliveMafia = game.getAliveMafia();
 
             if (!aliveMafia.isEmpty()) {
-                mafiaTarget = view.choosePlayer(
-                        "Мафия, выберите жертву среди города: ",
+                Player shooter = aliveMafia.get(0);
+                Player target = view.choosePlayer(
+                        "Мафия (" + shooter.getName() + "), выберите жертву среди города: ",
                         game.getAliveCity(), null);
 
-                for (Player mafia : aliveMafia) {
-                    actions.add(mafia.getRole().perform(mafia, mafiaTarget));
-                }
+                actions.add(shooter.getRole().perform(shooter, target));
 
                 addPrivate(journal, game, GamePhase.NIGHT,
-                        "Вы выбрали жертву: " + mafiaTarget.getName(),
+                        "Выстрел делает " + shooter.getName() + ", жертва: " + target.getName(),
                         Set.copyOf(aliveMafia));
             }
-
-            Player commissionerActor = null;
-            Player commissionerTarget = null;
-            Player doctorActor = null;
-            Player doctorTarget = null;
-            Player loverActor = null;
-            Player loverTarget = null;
 
             for (Player player : game.getAlivePlayers()) {
                 Role role = player.getRole();
 
-                if (role instanceof Commissioner) {
-                    commissionerActor = player;
-                    commissionerTarget = view.choosePlayer("Комиссар " + player.getName() + ", кого проверить: ", game.getAlivePlayers(), player);
-                    actions.add(role.perform(player, commissionerTarget));
-
-                } else if (role instanceof Doctor) {
-                    doctorActor = player;
-                    doctorTarget = view.choosePlayer("Доктор " + player.getName() + ", кого лечить: ", game.getAlivePlayers(), null);
-                    actions.add(role.perform(player, doctorTarget));
-
-                } else if (role instanceof Lover) {
-                    loverActor = player;
-                    loverTarget = view.choosePlayer("Любовница " + player.getName() + ", кого заблокировать: ", game.getAlivePlayers(), player);
-                    actions.add(role.perform(player, loverTarget));
+                if (!role.hasNightAction()) {
+                    continue;
                 }
+
+                Player target = view.choosePlayer(
+                        player.getName() + ", " + role.getNightPrompt() + ": ",
+                        game.getAlivePlayers(),
+                        role.canTargetSelf() ? null : player);
+
+                actions.add(role.perform(player, target));
             }
 
             NightResult nightResult = nightResolver.resolve(game, actions);
 
             // УТРО
-            game.setPhase(GamePhase.MORNING);
+            game.nextPhase();
             view.print("\n=== УТРО " + game.getDay() + " ===");
 
             if (nightResult.hasKilled()) {
@@ -143,26 +125,28 @@ public class Main {
                 addPublic(journal, game, GamePhase.MORNING, "Этой ночью никто не погиб");
             }
 
-            for (Map.Entry<Player, Team> check : nightResult.getChecks().entrySet()) {
-                String message = "Комиссар проверил " + check.getKey().getName() + ": " + check.getValue();
+            for (NightActionResult action : actions) {
+                Player actor = action.getActor();
+                Player target = action.getTarget();
 
-                if (commissionerActor != null) {
-                    addPrivate(journal, game, GamePhase.NIGHT, message, Set.of(commissionerActor));
+                if (nightResult.getBlocked().contains(actor)) {
+                    continue;
                 }
-            }
 
-            if (doctorActor != null && doctorTarget != null
-                    && !nightResult.getBlocked().contains(doctorActor)) {
-                addPrivate(journal, game, GamePhase.NIGHT,
-                        "Вы лечили: " + doctorTarget.getName(),
-                        Set.of(doctorActor));
-            }
-
-            if (loverActor != null && loverTarget != null
-                    && !nightResult.getBlocked().contains(loverActor)) {
-                addPrivate(journal, game, GamePhase.NIGHT,
-                        "Вы заблокировали: " + loverTarget.getName(),
-                        Set.of(loverActor));
+                if (action.getType() == NightActionType.CHECK) {
+                    Team team = action.getCheckedTeam().orElseThrow();
+                    addPrivate(journal, game, GamePhase.NIGHT,
+                            "Вы проверили " + target.getName() + ": " + team,
+                            Set.of(actor));
+                } else if (action.getType() == NightActionType.HEAL) {
+                    addPrivate(journal, game, GamePhase.NIGHT,
+                            "Вы лечили: " + target.getName(),
+                            Set.of(actor));
+                } else if (action.getType() == NightActionType.BLOCK) {
+                    addPrivate(journal, game, GamePhase.NIGHT,
+                            "Вы заблокировали: " + target.getName(),
+                            Set.of(actor));
+                }
             }
 
             for (Player blocked : nightResult.getBlocked()) {
@@ -178,11 +162,11 @@ public class Main {
             }
 
             // ОБСУЖДЕНИЕ
-            game.setPhase(GamePhase.DISCUSSION);
+            game.nextPhase();
             view.readLine("Обсуждение. Нажмите Enter, чтобы перейти к голосованию...");
 
             // ГОЛОСОВАНИЕ
-            game.setPhase(GamePhase.VOTING);
+            game.nextPhase();
             view.print("\n=== ГОЛОСОВАНИЕ ===");
 
             List<Player> alive = game.getAlivePlayers();
@@ -196,8 +180,13 @@ public class Main {
             }
 
             VotingResult votingResult = votingService.vote(votes, alive);
+            addPublic(journal, game, GamePhase.VOTING,
+                    "Голосование: " + formatCounts(votingResult.getCounts()));
 
             if (votingResult.isTie()) {
+                addPublic(journal, game, GamePhase.VOTING,
+                        "Ничья. Переголосование между: " + names(votingResult.getLeaders()));
+
                 view.print("Ничья. Переголосование между:");
                 for (Player leader : votingResult.getLeaders()) {
                     view.print("- " + leader.getName());
@@ -213,10 +202,12 @@ public class Main {
                 }
 
                 votingResult = votingService.vote(revotes, votingResult.getLeaders());
+                addPublic(journal, game, GamePhase.VOTING,
+                        "Переголосование: " + formatCounts(votingResult.getCounts()));
             }
 
             // КАЗНЬ
-            game.setPhase(GamePhase.EXECUTION);
+            game.nextPhase();
             view.print("\n=== КАЗНЬ ===");
 
             if (votingResult.hasExecuted()) {
@@ -237,6 +228,7 @@ public class Main {
             }
 
             game.nextDay();
+            game.nextPhase();
         }
 
         view.print("\n=== ИГРА ОКОНЧЕНА ===");
@@ -248,12 +240,61 @@ public class Main {
 
             if (entries.isEmpty()) {
                 view.print("Записей нет.");
-            } else {
-                for (JournalEntry entry : entries) {
-                    view.print("День " + entry.getDay() + " [" + entry.getPhase() + "]: " + entry.getMessage());
-                }
+                continue;
+            }
+
+            for (JournalEntry entry : entries) {
+                view.print("День " + entry.getDay() + " [" + entry.getPhase() + "]: " + entry.getMessage());
             }
         }
+    }
+
+    private static void addMafiaTeammateJournal(JournalService journal, Game game) {
+        List<Player> mafia = game.getAliveMafia();
+
+        if (mafia.size() < 2) {
+            return;
+        }
+
+        for (Player player : mafia) {
+            List<Player> teammates = new ArrayList<>();
+
+            for (Player other : mafia) {
+                if (other != player) {
+                    teammates.add(other);
+                }
+            }
+
+            addPrivate(journal, game, GamePhase.NIGHT,
+                    "Ваши напарники: " + names(teammates),
+                    Set.of(player));
+        }
+    }
+
+    private static String formatCounts(Map<Player, Integer> counts) {
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<Player, Integer> entry : counts.entrySet()) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+            result.append(entry.getKey().getName()).append(": ").append(entry.getValue());
+        }
+
+        return result.toString();
+    }
+
+    private static String names(List<Player> players) {
+        StringBuilder result = new StringBuilder();
+
+        for (Player player : players) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+            result.append(player.getName());
+        }
+
+        return result.toString();
     }
 
     private static void addPublic(JournalService journal, Game game, GamePhase phase, String message) {

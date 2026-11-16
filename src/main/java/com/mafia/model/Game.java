@@ -73,6 +73,10 @@ public class Game {
         this.phase = Objects.requireNonNull(phase, "Фаза не может быть null");
     }
 
+    public void nextPhase() {
+        this.phase = phase.next();
+    }
+
     public int getDay() {
         return day;
     }
@@ -93,8 +97,3 @@ public class Game {
         return winner != null;
     }
 }
-
-/*Аналогия:
-Player — фишка на столе;
-GamePhase — табличка «сейчас ночь»;
-Game — весь стол с фишками и табличкой.*/

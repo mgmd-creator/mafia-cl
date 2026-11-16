@@ -22,6 +22,18 @@ public abstract class Role implements NightAction {
         return team;
     }
 
+    public boolean hasNightAction() {
+        return true;
+    }
+
+    public boolean canTargetSelf() {
+        return false;
+    }
+
+    public String getNightPrompt() {
+        return "выберите цель";
+    }
+
     @Override
     public String toString() {
         return name;

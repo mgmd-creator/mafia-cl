@@ -16,6 +16,11 @@ public class Commissioner extends Role {
 
 
     @Override
+    public String getNightPrompt() {
+        return "кого проверить";
+    }
+
+    @Override
     public NightActionResult perform(Player actor, Player target) {
         Player checked = Objects.requireNonNull(target, "Комиссар должен выбрать цель");
         return NightActionResult.check(actor, checked, checked.getRole().getTeam());

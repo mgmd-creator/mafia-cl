@@ -43,6 +43,10 @@ public class ConsoleView {
             throw new IllegalArgumentException("Нет доступных игроков");
         }
 
+        if (candidates.size() == 1) {
+            return candidates.get(0);
+        }
+
         while (true) {
             print("Доступные игроки:");
             for (int i = 0; i < candidates.size(); i++) {

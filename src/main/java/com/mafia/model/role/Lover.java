@@ -14,6 +14,11 @@ public class Lover extends Role {
     }
 
     @Override
+    public String getNightPrompt() {
+        return "кого заблокировать";
+    }
+
+    @Override
     public NightActionResult perform(Player actor, Player target) {
         return NightActionResult.block(actor, target);
     }

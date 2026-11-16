@@ -14,6 +14,16 @@ public class Doctor extends Role {
     }
 
     @Override
+    public boolean canTargetSelf() {
+        return true;
+    }
+
+    @Override
+    public String getNightPrompt() {
+        return "кого лечить";
+    }
+
+    @Override
     public NightActionResult perform(Player actor, Player target) {
         return NightActionResult.heal(actor, target);
     }
