@@ -36,6 +36,6 @@ public abstract class Role implements NightAction {
 
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 }
