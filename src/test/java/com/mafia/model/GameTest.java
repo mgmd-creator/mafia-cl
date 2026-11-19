@@ -10,10 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GameTest {
 
     @Test
-    void alivePlayersExcludeDead() {
+    void gameStartsAtNightAndExcludesDeadPlayers() {
         Player alive = new Player("Аня", new Civilian());
         Player dead = new Player("Борис", new Civilian());
         Game game = new Game(List.of(alive, dead));
+
+        assertEquals(GamePhase.NIGHT, game.getPhase());
 
         dead.kill();
 
