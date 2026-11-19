@@ -34,6 +34,7 @@ class NightResolverTest {
 
         assertNull(result.getKilled());
         assertEquals(victim, result.getSaved());
+        assertTrue(result.hasSaved());
         assertTrue(victim.isAlive());
     }
 
