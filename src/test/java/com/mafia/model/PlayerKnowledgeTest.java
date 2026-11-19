@@ -4,9 +4,11 @@ import com.mafia.model.role.Civilian;
 import com.mafia.model.role.Mafia;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerKnowledgeTest {
 
@@ -16,6 +18,9 @@ class PlayerKnowledgeTest {
     @Test
     void remembersKnownTeam() {
         anya.getKnowledge().rememberTeam(boris, Team.MAFIA);
+
         assertEquals(Optional.of(Team.MAFIA), anya.getKnowledge().getKnownTeam(boris));
+        assertTrue(anya.getKnowledge().knowsTeamOf(boris));
+        assertEquals(Map.of(boris, Team.MAFIA), anya.getKnowledge().getKnownTeams());
     }
 }
