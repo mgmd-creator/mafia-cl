@@ -37,10 +37,6 @@ public class JournalEntry {
         return message;
     }
 
-    public Set<Player> getVisibleTo() {
-        return visibleTo;
-    }
-
     public boolean isPublic() {
         return visibleTo.isEmpty();
     }
