@@ -15,10 +15,7 @@ public class Game {
     private Team winner;
 
     public Game(List<Player> players) {
-        if (players == null || players.isEmpty()) {
-            throw new IllegalArgumentException("В партии должен быть хотя бы один игрок");
-        }
-        this.players = List.copyOf(players);
+        this.players = List.copyOf(Objects.requireNonNull(players, "Список игроков не может быть null"));
         this.phase = GamePhase.NIGHT;
         this.day = 1;
     }
